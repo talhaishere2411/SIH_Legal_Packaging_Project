@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1760" height="1560" viewBox="0 0 1760 1560" font-family="Helvetica, Arial, sans-serif">
+
+<defs>
+  <marker id="aGray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <path d="M0,0 L9,3.5 L0,7 z" fill="#64748b"/>
+  </marker>
+  <marker id="aBlue" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <path d="M0,0 L9,3.5 L0,7 z" fill="#2563eb"/>
+  </marker>
+  <marker id="aPurple" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <path d="M0,0 L9,3.5 L0,7 z" fill="#7c3aed"/>
+  </marker>
+  <marker id="aAmber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+    <path d="M0,0 L9,3.5 L0,7 z" fill="#d97706"/>
+  </marker>
+</defs>
+
+<rect width="1760" height="1560" fill="#f7f9fc"/>
+
+<!-- ══════════════ TITLE ══════════════ -->
+<text x="40" y="46" font-size="25" font-weight="bold" fill="#0f2744">Intelligent Food Packaging Recommendation System</text>
+<text x="40" y="72" font-size="13" fill="#5b6b7f">Architecture v2 &#183; mobile-first Kotlin client &#183; Python FastAPI backend &#183; three-store data model &#183; grounded generation</text>
+<line x1="40" y1="86" x2="1720" y2="86" stroke="#c8d3e0" stroke-width="1"/>
+
+<!-- ══════════════ MOBILE APP ══════════════ -->
+<rect x="40" y="100" width="330" height="600" rx="8" fill="#ffffff" stroke="#c8d3e0"/>
+<path d="M40,108 a8,8 0 0 1 8,-8 h314 a8,8 0 0 1 8,8 v34 h-330 z" fill="#1e3a5f"/>
+<text x="58" y="126" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">MOBILE APP</text>
+<text x="352" y="126" font-size="10.5" fill="#9fc0de" text-anchor="end">Kotlin &#183; Jetpack Compose</text>
+
+<text x="58" y="172" font-size="9.5" font-weight="bold" fill="#94a3b8" letter-spacing="1.2">UI SCREENS</text>
+<line x1="58" y1="181" x2="352" y2="181" stroke="#e2e8f0"/>
+
+<circle cx="64" cy="201" r="2.5" fill="#1e3a5f"/><text x="76" y="205" font-size="11.5" fill="#1f2937">Splash &#8594; Login</text>
+<circle cx="64" cy="225" r="2.5" fill="#1e3a5f"/><text x="76" y="229" font-size="11.5" fill="#1f2937">Chat</text>
+<text x="112" y="229" font-size="9.5" fill="#94a3b8">&#8212; core surface</text>
+<circle cx="64" cy="249" r="2.5" fill="#1e3a5f"/><text x="76" y="253" font-size="11.5" fill="#1f2937">Recommendation Report</text>
+<circle cx="64" cy="273" r="2.5" fill="#1e3a5f"/><text x="76" y="277" font-size="11.5" fill="#1f2937">History &#183; Saved reports</text>
+<circle cx="64" cy="297" r="2.5" fill="#1e3a5f"/><text x="76" y="301" font-size="11.5" fill="#1f2937">Dashboard &#183; Profile</text>
+<circle cx="64" cy="321" r="2.5" fill="#1e3a5f"/><text x="76" y="325" font-size="11.5" fill="#1f2937">Label Validator (ArUco)</text>
+
+<text x="58" y="360" font-size="9.5" font-weight="bold" fill="#94a3b8" letter-spacing="1.2">STATE &amp; DATA</text>
+<line x1="58" y1="369" x2="352" y2="369" stroke="#e2e8f0"/>
+
+<circle cx="64" cy="389" r="2.5" fill="#475569"/><text x="76" y="393" font-size="11.5" fill="#1f2937">ViewModels + UiState</text>
+<circle cx="64" cy="413" r="2.5" fill="#475569"/><text x="76" y="417" font-size="11.5" fill="#1f2937">Repository (domain layer)</text>
+<circle cx="64" cy="437" r="2.5" fill="#475569"/><text x="76" y="441" font-size="11.5" fill="#1f2937">Retrofit API client</text>
+<text x="182" y="441" font-size="9.5" fill="#94a3b8">&#8212; new</text>
+<circle cx="64" cy="461" r="2.5" fill="#475569"/><text x="76" y="465" font-size="11.5" fill="#1f2937">Room (offline cache)</text>
+<circle cx="64" cy="485" r="2.5" fill="#475569"/><text x="76" y="489" font-size="11.5" fill="#1f2937">CameraX + OpenCV</text>
+<text x="182" y="489" font-size="9.5" fill="#94a3b8">&#8212; on-device</text>
+
+<text x="58" y="524" font-size="9.5" font-weight="bold" fill="#94a3b8" letter-spacing="1.2">OFFLINE BEHAVIOUR</text>
+<line x1="58" y1="533" x2="352" y2="533" stroke="#e2e8f0"/>
+<circle cx="64" cy="553" r="2.5" fill="#475569"/><text x="76" y="557" font-size="11.5" fill="#1f2937">Cached reports render offline</text>
+<circle cx="64" cy="577" r="2.5" fill="#475569"/><text x="76" y="581" font-size="11.5" fill="#1f2937">Scans queue &#8594; sync on reconnect</text>
+
+<rect x="58" y="608" width="294" height="72" rx="6" fill="#f1f5f9" stroke="#e2e8f0"/>
+<text x="70" y="628" font-size="10" font-weight="bold" fill="#475569">DEMO MODE</text>
+<text x="70" y="645" font-size="10.5" fill="#5b6b7f">Ship 5 canned commodities; all screens</text>
+<text x="70" y="661" font-size="10.5" fill="#5b6b7f">render from local fixtures, no network.</text>
+
+<!-- arrow mobile -> backend -->
+<line x1="374" y1="620" x2="426" y2="620" stroke="#64748b" stroke-width="1.6" marker-end="url(#aGray)"/>
+<text x="400" y="606" font-size="9.5" font-weight="bold" fill="#64748b" text-anchor="middle">REST</text>
+<text x="400" y="640" font-size="9" fill="#94a3b8" text-anchor="middle">HTTPS &#183; JSON &#183; JWT</text>
+
+<!-- ══════════════ BACKEND ══════════════ -->
+<rect x="430" y="100" width="700" height="1100" rx="8" fill="#ffffff" stroke="#c8d3e0"/>
+<path d="M430,108 a8,8 0 0 1 8,-8 h684 a8,8 0 0 1 8,8 v34 h-700 z" fill="#1e3a5f"/>
+<text x="448" y="126" font-size="14" font-weight="bold" fill="#ffffff" letter-spacing="1">BACKEND</text>
+<text x="1112" y="126" font-size="10.5" fill="#9fc0de" text-anchor="end">Python &#183; FastAPI</text>
+
+<!-- API routes -->
+<rect x="450" y="150" width="660" height="56" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+<text x="466" y="170" font-size="9.5" font-weight="bold" fill="#1d4ed8" letter-spacing="1">API ROUTES</text>
+<text x="466" y="191" font-size="11.5" fill="#1e40af" font-family="ui-monospace, Menlo, monospace">/auth &#160; /chat &#160; /recommend &#160; /commodities &#160; /validate-label</text>
+
+<!-- Orchestrator -->
+<rect x="450" y="224" width="660" height="66" rx="6" fill="#ecfdf5" stroke="#6ee7b7"/>
+<text x="466" y="247" font-size="12.5" font-weight="bold" fill="#065f46">ORCHESTRATOR &#183; agent loop</text>
+<text x="466" y="267" font-size="11" fill="#047857">slot filling &#183; dialogue state &#183; tool routing &#183; decides which of steps 1&#8211;8 to run</text>
+<text x="466" y="283" font-size="10.5" fill="#059669">if a critical slot is empty &#8594; return exactly one clarifying question to the chat</text>
+
+<!-- ─── STEP 1 ─── -->
+<rect x="450" y="310" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="310" width="5" height="84" rx="2.5" fill="#64748b"/>
+<circle cx="486" cy="338" r="14" fill="#64748b"/><text x="486" y="343" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">1</text>
+<text x="512" y="334" font-size="13" font-weight="bold" fill="#1f2937">INTENT PARSER</text>
+<text x="1092" y="334" font-size="9.5" font-weight="bold" fill="#64748b" text-anchor="end">LLM &#183; SCHEMA-CONSTRAINED</text>
+<text x="512" y="355" font-size="11" fill="#4b5563">extract commodity, process, shelf life, storage type, pack size, distribution</text>
+<text x="512" y="374" font-size="11" fill="#4b5563">forced JSON output &#8212; never free-form; unmatched slots stay null</text>
+
+<!-- ─── STEP 2 ─── -->
+<rect x="450" y="404" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="404" width="5" height="84" rx="2.5" fill="#2563eb"/>
+<circle cx="486" cy="432" r="14" fill="#2563eb"/><text x="486" y="437" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">2</text>
+<text x="512" y="428" font-size="13" font-weight="bold" fill="#1f2937">PROFILE LOOKUP</text>
+<text x="1092" y="428" font-size="9.5" font-weight="bold" fill="#2563eb" text-anchor="end">POSTGRES &#183; EXACT QUERY</text>
+<text x="512" y="449" font-size="11" fill="#4b5563">moisture % &#183; fat % &#183; pH &#183; respiration rate &#183; IS 9845 food group &#183; chilling sensitivity</text>
+<text x="512" y="468" font-size="11" fill="#4b5563">sources: IFCT 2017 (composition) + ICAR-CIPHET (MAP trials) &#8212; shown to user as an editable card</text>
+
+<!-- ─── STEP 3 ─── -->
+<rect x="450" y="498" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="498" width="5" height="84" rx="2.5" fill="#059669"/>
+<circle cx="486" cy="526" r="14" fill="#059669"/><text x="486" y="531" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">3</text>
+<text x="512" y="522" font-size="13" font-weight="bold" fill="#1f2937">BARRIER CALCULATOR</text>
+<text x="1092" y="522" font-size="9.5" font-weight="bold" fill="#059669" text-anchor="end">PURE PYTHON &#183; NO MODEL</text>
+<text x="512" y="543" font-size="11" fill="#4b5563">oxidation risk &#8592; fat % + shelf life + temp &#160;&#8594;&#160; max OTR</text>
+<text x="512" y="562" font-size="11" fill="#4b5563">moisture gain &#8592; moisture % + RH &#160;&#8594;&#160; max WVTR &#160;&#183;&#160; fresh produce uses the respiration equation</text>
+
+<!-- ─── STEP 4 ─── -->
+<rect x="450" y="592" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="592" width="5" height="84" rx="2.5" fill="#2563eb"/>
+<circle cx="486" cy="620" r="14" fill="#2563eb"/><text x="486" y="625" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">4</text>
+<text x="512" y="616" font-size="13" font-weight="bold" fill="#1f2937">CANDIDATE SELECTOR</text>
+<text x="1092" y="616" font-size="9.5" font-weight="bold" fill="#2563eb" text-anchor="end">POSTGRES &#183; SQL FILTER + RANK</text>
+<text x="512" y="637" font-size="11" fill="#4b5563">WHERE barrier within target AND food-contact IS codes present AND not recycled</text>
+<text x="512" y="656" font-size="11" fill="#4b5563">rank by barrier margin &#8594; cost index &#8594; sustainability score &#160;&#183;&#160; every row carries test conditions</text>
+
+<!-- ─── STEP 5 ─── -->
+<rect x="450" y="686" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="686" width="5" height="84" rx="2.5" fill="#d97706"/>
+<circle cx="486" cy="714" r="14" fill="#d97706"/><text x="486" y="719" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">5</text>
+<text x="512" y="710" font-size="13" font-weight="bold" fill="#1f2937">COMPLIANCE VALIDATOR</text>
+<text x="1092" y="710" font-size="9.5" font-weight="bold" fill="#d97706" text-anchor="end">RULES (CODE) + RAG (TEXT)</text>
+<text x="512" y="731" font-size="11" fill="#4b5563">hard filters run in code: OML 60 mg/kg, Schedule III/IV, recycled-plastic ban</text>
+<text x="512" y="750" font-size="11" fill="#4b5563">clause text + statutory citation pulled from pgvector so every limit is quotable</text>
+
+<!-- ─── STEP 6 ─── -->
+<rect x="450" y="780" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="780" width="5" height="84" rx="2.5" fill="#2563eb"/>
+<circle cx="486" cy="808" r="14" fill="#2563eb"/><text x="486" y="813" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">6</text>
+<text x="512" y="804" font-size="13" font-weight="bold" fill="#1f2937">MAP MODULE</text>
+<text x="1092" y="804" font-size="9.5" font-weight="bold" fill="#2563eb" text-anchor="end">POSTGRES &#183; FRESH PRODUCE ONLY</text>
+<text x="512" y="825" font-size="11" fill="#4b5563">O&#8322; / CO&#8322; / N&#8322; composition + micro-perforation count from respiration rate</text>
+<text x="512" y="844" font-size="11" fill="#4b5563">skipped entirely for dry / ambient / frozen commodities</text>
+
+<!-- ─── STEP 7 ─── -->
+<rect x="450" y="874" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="874" width="5" height="84" rx="2.5" fill="#7c3aed"/>
+<circle cx="486" cy="902" r="14" fill="#7c3aed"/><text x="486" y="907" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">7</text>
+<text x="512" y="898" font-size="13" font-weight="bold" fill="#1f2937">SUSTAINABILITY MODULE</text>
+<text x="1092" y="898" font-size="9.5" font-weight="bold" fill="#7c3aed" text-anchor="end">POSTGRES FLAGS + RAG NARRATIVE</text>
+<text x="512" y="919" font-size="11" fill="#4b5563">recyclable / IS 17088 compostable / IS 17899T biodegradable alternatives</text>
+<text x="512" y="938" font-size="11" fill="#4b5563">explanation grounded in BIS Sustainable Packaging Handbook + CPCB SOP chunks</text>
+
+<!-- ─── STEP 8 ─── -->
+<rect x="450" y="968" width="660" height="84" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+<rect x="450" y="968" width="5" height="84" rx="2.5" fill="#64748b"/>
+<circle cx="486" cy="996" r="14" fill="#64748b"/><text x="486" y="1001" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">8</text>
+<text x="512" y="992" font-size="13" font-weight="bold" fill="#1f2937">REPORT COMPOSER</text>
+<text x="1092" y="992" font-size="9.5" font-weight="bold" fill="#64748b" text-anchor="end">LLM &#183; NARRATIVE ONLY</text>
+<text x="512" y="1013" font-size="11" fill="#4b5563">all numbers injected as context from steps 3&#8211;7; model writes prose + rationale</text>
+<text x="512" y="1032" font-size="11" fill="#4b5563">emits typed JSON: structure &#183; specs &#183; compliance &#183; MAP &#183; citations[] &#183; source per field</text>
+
+<!-- grounding contract -->
+<rect x="450" y="1072" width="660" height="80" rx="6" fill="#fffbeb" stroke="#fcd34d"/>
+<text x="466" y="1095" font-size="10" font-weight="bold" fill="#92400e" letter-spacing="0.8">GROUNDING CONTRACT</text>
+<text x="466" y="1115" font-size="11" fill="#78350f">The model never generates a number. Every output field carries</text>
+<text x="466" y="1134" font-size="11" fill="#78350f" font-family="ui-monospace, Menlo, monospace">source: calc | db:&lt;table&gt; | rag:&lt;chunk_id&gt;</text>
+<text x="466" y="1147" font-size="10" fill="#a16207">Unsourced numbers are rejected by response validation before the client sees them.</text>
+
+<!-- response arrow -->
+<line x1="780" y1="1170" x2="780" y2="1186" stroke="#64748b" stroke-width="1.6"/>
+<text x="796" y="1183" font-size="10.5" fill="#475569">typed JSON &#8594; client renders cards, never raw text</text>
+
+<!-- ══════════════ STORE A: POSTGRES ══════════════ -->
+<rect x="1190" y="100" width="530" height="430" rx="8" fill="#ffffff" stroke="#c8d3e0"/>
+<path d="M1190,108 a8,8 0 0 1 8,-8 h514 a8,8 0 0 1 8,8 v34 h-530 z" fill="#2563eb"/>
+<text x="1208" y="126" font-size="13.5" font-weight="bold" fill="#ffffff" letter-spacing="0.8">STORE A &#183; POSTGRES</text>
+<text x="1702" y="126" font-size="10.5" fill="#bfdbfe" text-anchor="end">structured &#183; curated &#183; non-RAG</text>
+
+<text x="1215" y="155" font-size="9.5" font-weight="bold" fill="#94a3b8" letter-spacing="1">TABLE</text>
+<text x="1400" y="155" font-size="9.5" font-weight="bold" fill="#94a3b8" letter-spacing="1">KEY COLUMNS</text>
+<line x1="1215" y1="163" x2="1702" y2="163" stroke="#e2e8f0"/>
+
+<text x="1215" y="184" font-size="11.5" font-weight="bold" fill="#1e40af">commodities</text>
+<text x="1400" y="184" font-size="10.5" fill="#5b6b7f">30 CIPHET + extended &#183; moisture, fat, pH, respiration</text>
+
+<text x="1215" y="210" font-size="11.5" font-weight="bold" fill="#1e40af">materials</text>
+<text x="1400" y="210" font-size="10.5" fill="#5b6b7f">OTR, WVTR, thickness, seal, strength, cost</text>
+
+<text x="1215" y="236" font-size="11.5" font-weight="bold" fill="#1e40af">structures</text>
+<text x="1400" y="236" font-size="10.5" fill="#5b6b7f">laminate stacks + measured barriers</text>
+
+<text x="1215" y="262" font-size="11.5" font-weight="bold" fill="#1e40af">is_materials_map</text>
+<text x="1400" y="262" font-size="10.5" fill="#5b6b7f">IS code &#8596; polymer &#8596; FSSAI schedule</text>
+
+<text x="1215" y="288" font-size="11.5" font-weight="bold" fill="#1e40af">fssai_schedule_iv</text>
+<text x="1400" y="288" font-size="10.5" fill="#5b6b7f">food category &#8594; permitted materials</text>
+
+<text x="1215" y="314" font-size="11.5" font-weight="bold" fill="#1e40af">map_recommendations</text>
+<text x="1400" y="314" font-size="10.5" fill="#5b6b7f">O&#8322;/CO&#8322;/N&#8322; %, temp, shelf-life days</text>
+
+<text x="1215" y="340" font-size="11.5" font-weight="bold" fill="#1e40af">sml_limits</text>
+<text x="1400" y="340" font-size="10.5" fill="#5b6b7f">substance &#183; specific migration limit &#183; unit</text>
+
+<text x="1215" y="366" font-size="11.5" font-weight="bold" fill="#1e40af">users &#183; sessions &#183; reports</text>
+<text x="1400" y="366" font-size="10.5" fill="#5b6b7f">auth + saved chat and report history</text>
+
+<rect x="1215" y="390" width="470" height="112" rx="6" fill="#eff6ff" stroke="#bfdbfe"/>
+<text x="1231" y="412" font-size="10" font-weight="bold" fill="#1d4ed8" letter-spacing="0.8">WHY THIS IS NOT RAG</text>
+<text x="1231" y="433" font-size="10.5" fill="#1e40af">These are exact-match lookups on measured values.</text>
+<text x="1231" y="450" font-size="10.5" fill="#1e40af">Embeddings add nothing, and a model asked to recall</text>
+<text x="1231" y="467" font-size="10.5" fill="#1e40af">an OTR value will invent one. Query with SQL or a</text>
+<text x="1231" y="484" font-size="10.5" fill="#1e40af">function call; let the model choose the query, not the number.</text>
+
+<!-- ══════════════ STORE B: PGVECTOR ══════════════ -->
+<rect x="1190" y="565" width="530" height="340" rx="8" fill="#ffffff" stroke="#c8d3e0"/>
+<path d="M1190,573 a8,8 0 0 1 8,-8 h514 a8,8 0 0 1 8,8 v34 h-530 z" fill="#7c3aed"/>
+<text x="1208" y="591" font-size="13.5" font-weight="bold" fill="#ffffff" letter-spacing="0.8">STORE B &#183; PGVECTOR</text>
+<text x="1702" y="591" font-size="10.5" fill="#ddd6fe" text-anchor="end">semantic &#183; RAG</text>
+
+<text x="1215" y="620" font-size="9.5" font-weight="bold" fill="#94a3b8" letter-spacing="1">CORPUS</text>
+<line x1="1215" y1="628" x2="1702" y2="628" stroke="#e2e8f0"/>
+
+<text x="1215" y="649" font-size="11.5" fill="#1f2937">FSSAI (Packaging) Regulations 2018</text>
+<text x="1660" y="649" font-size="10" fill="#7c3aed" text-anchor="end">Schedules I&#8211;IV</text>
+
+<text x="1215" y="675" font-size="11.5" fill="#1f2937">FSSAI (Labelling &amp; Display) 2020</text>
+<text x="1660" y="675" font-size="10" fill="#7c3aed" text-anchor="end">Module 2 rules</text>
+
+<text x="1215" y="701" font-size="11.5" fill="#1f2937">BIS Sustainable Packaging Handbook</text>
+<text x="1660" y="701" font-size="10" fill="#059669" text-anchor="end">free full text</text>
+
+<text x="1215" y="727" font-size="11.5" fill="#1f2937">CPCB SOP &#183; IS/ISO 17088 compostable</text>
+<text x="1660" y="727" font-size="10" fill="#7c3aed" text-anchor="end">certification</text>
+
+<text x="1215" y="753" font-size="11.5" fill="#1f2937">IS 9845:1998</text>
+<text x="1660" y="753" font-size="10" fill="#7c3aed" text-anchor="end">7 food-simulant groups</text>
+
+<text x="1215" y="779" font-size="11.5" fill="#1f2937">Selected MAP / respiration literature</text>
+<text x="1660" y="779" font-size="10" fill="#7c3aed" text-anchor="end">international, flagged</text>
+
+<rect x="1215" y="800" width="470" height="86" rx="6" fill="#faf5ff" stroke="#ddd6fe"/>
+<text x="1231" y="820" font-size="9.5" font-weight="bold" fill="#6d28d9">CHUNKING</text>
+<text x="1310" y="820" font-size="10.5" fill="#5b21b6">clause-aware &#183; schedule rows kept whole &#183; breadcrumb prefix</text>
+<text x="1231" y="841" font-size="9.5" font-weight="bold" fill="#6d28d9">RETRIEVAL</text>
+<text x="1310" y="841" font-size="10.5" fill="#5b21b6">cosine + Postgres FTS (tsvector) &#8594; RRF fusion</text>
+<text x="1231" y="862" font-size="9.5" font-weight="bold" fill="#6d28d9">FILTER</text>
+<text x="1310" y="862" font-size="10.5" fill="#5b21b6">pre-filter on metadata.is_codes[] when a material is named</text>
+<text x="1231" y="878" font-size="10" fill="#7c3aed">~400&#8211;600 chunks: retrieval buys citation grounding, not scale. Do not over-build.</text>
+
+<!-- ══════════════ STORE C: RULES ══════════════ -->
+<rect x="1190" y="930" width="530" height="270" rx="8" fill="#ffffff" stroke="#c8d3e0"/>
+<path d="M1190,938 a8,8 0 0 1 8,-8 h514 a8,8 0 0 1 8,8 v34 h-530 z" fill="#d97706"/>
+<text x="1208" y="956" font-size="13.5" font-weight="bold" fill="#ffffff" letter-spacing="0.8">STORE C &#183; RULES</text>
+<text x="1702" y="956" font-size="10.5" fill="#fde68a" text-anchor="end">versioned config &#183; unit-tested</text>
+
+<text x="1215" y="1000" font-size="10.5" fill="#92400e">Versioned YAML in the repo. Loaded at boot. Never inferred by the model.</text>
+
+<circle cx="1223" cy="1022" r="2.5" fill="#d97706"/><text x="1235" y="1026" font-size="11.5" fill="#1f2937">Overall migration limit: 60 mg/kg or 10 mg/dm&#178; (IS 9845)</text>
+<circle cx="1223" cy="1048" r="2.5" fill="#d97706"/><text x="1235" y="1052" font-size="11.5" fill="#1f2937">Recycled plastics prohibited for food contact</text>
+<circle cx="1223" cy="1074" r="2.5" fill="#d97706"/><text x="1235" y="1078" font-size="11.5" fill="#1f2937">Printing inks &#8594; IS 15495 &#160;&#183;&#160; pigments &#8594; IS 9833</text>
+<circle cx="1223" cy="1100" r="2.5" fill="#d97706"/><text x="1235" y="1104" font-size="11.5" fill="#1f2937">Packaged-water carve-out: PE / PVC / PET / PP only</text>
+<circle cx="1223" cy="1126" r="2.5" fill="#d97706"/><text x="1235" y="1130" font-size="11.5" fill="#1f2937">Food-category taxonomy borrowed from IS 9845's seven groups</text>
+
+<rect x="1215" y="1148" width="470" height="36" rx="6" fill="#fffbeb" stroke="#fcd34d"/>
+<text x="1231" y="1170" font-size="10.5" fill="#78350f">A model must never be the source of a legal limit &#8212; tests fail on drift.</text>
+
+<!-- arrows stores -> backend -->
+<line x1="1186" y1="315" x2="1136" y2="315" stroke="#2563eb" stroke-width="1.6" marker-end="url(#aBlue)"/>
+<line x1="1186" y1="735" x2="1136" y2="735" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#aPurple)"/>
+<line x1="1186" y1="1065" x2="1136" y2="1065" stroke="#d97706" stroke-width="1.6" marker-end="url(#aAmber)"/>
+
+<!-- ══════════════ LEGEND ══════════════ -->
+<rect x="40" y="1262" width="1680" height="84" rx="8" fill="#ffffff" stroke="#c8d3e0"/>
+<text x="60" y="1286" font-size="9.5" font-weight="bold" fill="#94a3b8" letter-spacing="1.2">WHERE A NUMBER IS ALLOWED TO COME FROM</text>
+
+<rect x="60" y="1300" width="16" height="16" rx="3" fill="#059669"/>
+<text x="86" y="1307" font-size="10.5" font-weight="bold" fill="#1f2937">DETERMINISTIC COMPUTE</text>
+<text x="86" y="1321" font-size="9.5" fill="#6b7280">pure Python, no model</text>
+
+<rect x="290" y="1300" width="16" height="16" rx="3" fill="#2563eb"/>
+<text x="316" y="1307" font-size="10.5" font-weight="bold" fill="#1f2937">STRUCTURED LOOKUP</text>
+<text x="316" y="1321" font-size="9.5" fill="#6b7280">Postgres &#183; SQL</text>
+
+<rect x="510" y="1300" width="16" height="16" rx="3" fill="#7c3aed"/>
+<text x="536" y="1307" font-size="10.5" font-weight="bold" fill="#1f2937">SEMANTIC RETRIEVAL</text>
+<text x="536" y="1321" font-size="9.5" fill="#6b7280">pgvector &#183; RAG</text>
+
+<rect x="740" y="1300" width="16" height="16" rx="3" fill="#d97706"/>
+<text x="766" y="1307" font-size="10.5" font-weight="bold" fill="#1f2937">HARD RULES</text>
+<text x="766" y="1321" font-size="9.5" fill="#6b7280">versioned config</text>
+
+<rect x="950" y="1300" width="16" height="16" rx="3" fill="#64748b"/>
+<text x="976" y="1307" font-size="10.5" font-weight="bold" fill="#1f2937">LLM &#8212; NARRATIVE ONLY</text>
+<text x="976" y="1321" font-size="9.5" fill="#6b7280">never emits a number</text>
+
+<!-- ══════════════ MODULE 2 ══════════════ -->
+<rect x="40" y="1372" width="1680" height="152" rx="8" fill="#ffffff" stroke="#c8d3e0"/>
+<path d="M40,1380 a8,8 0 0 1 8,-8 h1664 a8,8 0 0 1 8,8 v34 h-1680 z" fill="#0f766e"/>
+<text x="58" y="1398" font-size="13" font-weight="bold" fill="#ffffff" letter-spacing="0.8">MODULE 2 &#183; ARUCO LABEL &amp; LAYOUT VALIDATOR</text>
+<text x="1702" y="1398" font-size="10.5" fill="#99f6e4" text-anchor="end">existing pipeline, carried forward &#8212; no new research needed</text>
+
+<rect x="60" y="1438" width="300" height="60" rx="6" fill="#f0fdfa" stroke="#99f6e4"/>
+<text x="74" y="1460" font-size="11.5" font-weight="bold" fill="#115e59">1 &#183; CameraX + ArUco 4&#215;4</text>
+<text x="74" y="1479" font-size="10.5" fill="#0f766e">on-device &#183; yields mm-per-pixel scale</text>
+
+<line x1="364" y1="1468" x2="388" y2="1468" stroke="#5eead4" stroke-width="2" marker-end="url(#aGray)"/>
+
+<rect x="392" y="1438" width="280" height="60" rx="6" fill="#f0fdfa" stroke="#99f6e4"/>
+<text x="406" y="1460" font-size="11.5" font-weight="bold" fill="#115e59">2 &#183; YOLOv8 field detection</text>
+<text x="406" y="1479" font-size="10.5" fill="#0f766e">backend &#183; logo, MRP, nutrition, dates</text>
+
+<line x1="676" y1="1468" x2="700" y2="1468" stroke="#5eead4" stroke-width="2" marker-end="url(#aGray)"/>
+
+<rect x="704" y="1438" width="320" height="60" rx="6" fill="#f0fdfa" stroke="#99f6e4"/>
+<text x="718" y="1460" font-size="11.5" font-weight="bold" fill="#115e59">3 &#183; PaddleOCR &#8594; Qwen2.5-VL</text>
+<text x="718" y="1479" font-size="10.5" fill="#0f766e">vision fallback only when confidence is low</text>
+
+<line x1="1028" y1="1468" x2="1052" y2="1468" stroke="#5eead4" stroke-width="2" marker-end="url(#aGray)"/>
+
+<rect x="1056" y="1438" width="320" height="60" rx="6" fill="#f0fdfa" stroke="#99f6e4"/>
+<text x="1070" y="1460" font-size="11.5" font-weight="bold" fill="#115e59">4 &#183; Rule check (measured)</text>
+<text x="1070" y="1479" font-size="10.5" fill="#0f766e">font mm, contrast, placement &#183; FSSAI 2020 + LM 2011</text>
+
+<line x1="1380" y1="1468" x2="1404" y2="1468" stroke="#5eead4" stroke-width="2" marker-end="url(#aGray)"/>
+
+<rect x="1408" y="1438" width="292" height="60" rx="6" fill="#ecfdf5" stroke="#6ee7b7"/>
+<text x="1422" y="1460" font-size="11.5" font-weight="bold" fill="#065f46">5 &#183; Tri-tier verdict</text>
+<text x="1422" y="1479" font-size="10.5" fill="#047857">L1 compliant &#183; L2 review &#183; L3 violation</text>
+
+</svg>

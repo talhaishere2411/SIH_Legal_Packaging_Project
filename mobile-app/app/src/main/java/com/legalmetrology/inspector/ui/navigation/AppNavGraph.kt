@@ -8,11 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.legalmetrology.inspector.ui.screens.chat.ChatScreen
 import com.legalmetrology.inspector.ui.screens.dashboard.DashboardScreen
 import com.legalmetrology.inspector.ui.screens.ecommerce.ECommerceScreen
 import com.legalmetrology.inspector.ui.screens.history.HistoryScreen
 import com.legalmetrology.inspector.ui.screens.login.LoginScreen
 import com.legalmetrology.inspector.ui.screens.onboarding.OnboardingScreen
+import com.legalmetrology.inspector.ui.screens.report.PackagingReportScreen
 import com.legalmetrology.inspector.ui.screens.report.ReportScreen
 import com.legalmetrology.inspector.ui.screens.review.ReviewScreen
 import com.legalmetrology.inspector.ui.screens.scan.ScanScreen
@@ -46,7 +48,7 @@ fun AppNavGraph(navController: NavHostController) {
                     }
                 },
                 onNavigateToDashboard = {
-                    navController.navigate(Screen.Dashboard.route) {
+                    navController.navigate(Screen.Chat.route) {
                         popUpTo(Screen.Splash.route) { inclusive = true }
                     }
                 }
@@ -56,7 +58,7 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
-                    navController.navigate(Screen.Dashboard.route) {
+                    navController.navigate(Screen.Chat.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
                     }
                 }
@@ -145,6 +147,31 @@ fun AppNavGraph(navController: NavHostController) {
                     navController.navigate(Screen.Report.createRoute(inspectionId))
                 },
                 onBack = { navController.navigateUp() }
+            )
+        }
+
+        composable(Screen.Chat.route) {
+            ChatScreen(
+                onOpenReport = { requestId ->
+                    navController.navigate(Screen.PackagingReport.createRoute(requestId))
+                },
+                onOpenLabelValidator = {
+                    navController.navigate(Screen.Onboarding.route)
+                },
+                onOpenHistory = {
+                    navController.navigate(Screen.History.route)
+                }
+            )
+        }
+
+        composable(Screen.PackagingReport.route) {
+            // requestId reaches PackagingReportViewModel through the
+            // destination's SavedStateHandle, so it is not read here.
+            PackagingReportScreen(
+                onBack = { navController.navigateUp() },
+                onValidateLabel = {
+                    navController.navigate(Screen.Onboarding.route)
+                }
             )
         }
 

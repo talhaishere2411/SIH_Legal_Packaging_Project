@@ -21,4 +21,12 @@ sealed class Screen(val route: String) {
     object History      : Screen("history")
     object Dashboard    : Screen("dashboard")
     object ECommerce    : Screen("ecommerce")
+
+    // --- Packaging Advisor (primary flow) ---
+    /** Conversational recommendation surface — the app's home. */
+    object Chat            : Screen("chat")
+    /** Full recommendation report produced by a chat turn. */
+    object PackagingReport : Screen("packaging_report/{requestId}") {
+        fun createRoute(requestId: String) = "packaging_report/$requestId"
+    }
 }
