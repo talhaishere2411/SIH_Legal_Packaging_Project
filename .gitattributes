@@ -1,0 +1,18 @@
+# Line-ending handling for the Gradle wrapper.
+#
+# gradlew is a POSIX shell script and MUST stay LF — a stray CR breaks the
+# shebang on Linux and macOS. gradlew.bat is a Windows batch file and is
+# stored LF (matching upstream Gradle's blob) but checked out CRLF, which
+# is what cmd.exe expects.
+gradlew                text eol=lf
+gradlew.bat            text eol=crlf
+*.bat                  text eol=crlf
+
+# Binary — never let Git try to normalise or diff it.
+gradle-wrapper.jar     binary
+*.jar                  binary
+*.pdf                  binary
+*.png                  binary
+*.jpg                  binary
+*.jks                  binary
+*.keystore             binary
