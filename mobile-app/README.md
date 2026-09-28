@@ -56,22 +56,33 @@ app/src/main/java/com/legalmetrology/inspector/
 │   ├── api/
 │   │   ├── ApiDtos.kt         ← Request/response DTOs
 │   │   └── MockInspectionApiService.kt ← MOCK: replace with Retrofit
-│   └── db/
-│       ├── InspectionDatabase.kt
-│       ├── InspectionDao.kt
-│       └── entity/
+│   ├── db/
+│   │   ├── InspectionDatabase.kt
+│   │   ├── InspectionDao.kt
+│   │   └── entity/
+│   ├── fixtures/
+│   │   └── RecommendationFixtures.kt ← DEMO DATA for Module 1 (see §Packaging Advisor)
+│   └── repository/
+│       ├── FixtureRecommendationRepository.kt ← offline impl of the seam
+│       └── RecommendationCache.kt  ← chat → report handoff (in-memory)
 ├── domain/
-│   └── model/Models.kt        ← Pure domain models (no framework deps)
-├── di/                        ← Hilt DI modules
+│   ├── model/
+│   │   ├── Models.kt          ← Pure domain models (no framework deps)
+│   │   └── Recommendation.kt  ← Module 1 contract (mirrors FastAPI JSON)
+│   └── repository/
+│       └── RecommendationRepository.kt ← THE SEAM: fixtures now, Retrofit later
+├── di/                        ← Hilt DI modules (RepositoryModule = swap point)
 ├── ui/
 │   ├── navigation/            ← NavGraph + Screen routes
 │   ├── screens/
 │   │   ├── splash/
 │   │   ├── login/
 │   │   ├── onboarding/        ← Package type + category selection
-│   │   ├── scan/              ← AR camera + overlays (CORE)
+│   │   ├── scan/              ← AR camera + overlays (Module 2)
 │   │   ├── review/            ← Photo review + submission
 │   │   ├── report/            ← Compliance verdict cards
+│   │   │                        + PackagingReportScreen.kt (Module 1)
+│   │   ├── chat/              ← MODULE 1 home: ChatScreen, ChatViewModel, cards
 │   │   ├── history/           ← Past inspections
 │   │   ├── dashboard/         ← Officer home
 │   │   └── ecommerce/         ← Screenshot-based listing check
@@ -79,6 +90,54 @@ app/src/main/java/com/legalmetrology/inspector/
 ├── LegalMetrologyApp.kt       ← @HiltAndroidApp
 └── MainActivity.kt
 ```
+
+## Packaging Advisor (Module 1)
+
+The app's primary flow is now a chat surface where a manufacturer describes what
+they need to pack and gets back a **structured recommendation** — material,
+barrier window, MAP gas mix, compliance notes, sustainable alternatives and
+citations — rather than prose. Sign in now lands on `ChatScreen`; the full report
+is a second destination reached by `requestId`.
+
+Full design, data model and roadmap: **[`../docs/PACKAGING_ADVISOR.md`](../docs/PACKAGING_ADVISOR.md)**.
+
+### How it is wired
+
+```
+ChatScreen ──► ChatViewModel ──► RecommendationRepository (interface)
+                                        │
+                                        ├── FixtureRecommendationRepository  ← bound now
+                                        └── Retrofit implementation          ← later
+```
+
+`di/RepositoryModule.kt` is the **only** file to change when the FastAPI backend
+lands. Every screen and ViewModel is written against the interface, so nothing
+above it moves.
+
+### Grounding rule
+
+The model writes narrative; it never originates a number. Every claim group
+carries a `SourceRef` (`CALC` / `DB` / `RAG` / `USER`), which is enforced by the
+type in `domain/model/Recommendation.kt`, not left as a convention.
+
+### Demo mode
+
+Runs entirely offline on 5 canned commodities in `data/fixtures/RecommendationFixtures.kt`
+— roasted peanuts, fresh okra, fresh mango, milk powder, ground chilli — each
+exercising a different engine branch.
+
+**Commodity composition** comes from IFCT 2017 and fresh-produce shelf life from
+ICAR-CIPHET MAP protocols. **The OTR/WVTR values and barrier targets are
+engineered illustrations** for UI development — plausible but not measured. Do
+not present them as verified.
+
+### Not yet compiled
+
+This module passes 508 static checks (named arguments, enum members, call sites,
+property accesses, `Modifier.weight` scoping) but has **never been through
+`kotlinc`** — the development environment has no JVM or Gradle toolchain. Run
+`./gradlew assembleDebug` before trusting it. Type compatibility, nullability,
+generics and Compose BOM parameter names are all unverified.
 
 ## Backend Integration
 
