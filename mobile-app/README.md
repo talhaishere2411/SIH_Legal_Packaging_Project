@@ -126,18 +126,28 @@ Runs entirely offline on 5 canned commodities in `data/fixtures/RecommendationFi
 — roasted peanuts, fresh okra, fresh mango, milk powder, ground chilli — each
 exercising a different engine branch.
 
+The demo has a small scenario matrix keyed by commodity, shelf-life bucket and
+storage type. The peanut walkthrough visibly changes from PET / LDPE for up to
+30 days, to metalized PET / Al / LDPE for 1–6 months, to foil / LDPE beyond six
+months. Missing cells fall back to the nearest authored scenario and record that
+assumption rather than inventing a number. Profile cards can be corrected for
+moisture, fat, pH and storage; quick replies use a local answer bank; reports
+include a side-by-side material comparison and a guided peanut demo.
+
 **Commodity composition** comes from IFCT 2017 and fresh-produce shelf life from
 ICAR-CIPHET MAP protocols. **The OTR/WVTR values and barrier targets are
 engineered illustrations** for UI development — plausible but not measured. Do
-not present them as verified.
+not present them as verified. The report repeats this as a visible demo badge.
 
-### Not yet compiled
+### Verification status
 
-This module passes 508 static checks (named arguments, enum members, call sites,
-property accesses, `Modifier.weight` scoping) but has **never been through
-`kotlinc`** — the development environment has no JVM or Gradle toolchain. Run
-`./gradlew assembleDebug` before trusting it. Type compatibility, nullability,
-generics and Compose BOM parameter names are all unverified.
+The pure Kotlin domain, fixtures, repository and chat ViewModel now compile with
+Kotlin/JVM 2.4.20 and `-Werror`; a smoke check covers the peanut scenario matrix,
+barrier-window coherence and follow-up bank. The full Android build is still
+pending: `./gradlew assembleDebug` reaches the wrapper but this sandbox cannot
+complete the Gradle 8.13 distribution download because its TLS connection to
+`services.gradle.org` is blocked. Run it in a normal Android/Gradle environment
+before trusting Compose or Android-specific API compatibility.
 
 ## Backend Integration
 

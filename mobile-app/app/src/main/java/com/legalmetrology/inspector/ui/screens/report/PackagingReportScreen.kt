@@ -69,6 +69,7 @@ import com.legalmetrology.inspector.ui.theme.White
 fun PackagingReportScreen(
     onBack: () -> Unit,
     onValidateLabel: () -> Unit,
+    onCompare: (String) -> Unit,
     viewModel: PackagingReportViewModel = hiltViewModel()
 ) {
     val recommendation = viewModel.recommendation
@@ -123,6 +124,30 @@ fun PackagingReportScreen(
 
             Spacer(Modifier.height(14.dp))
             AssumptionsSection(recommendation)
+
+            if (recommendation.alternatives.size >= 2) {
+                Spacer(Modifier.height(14.dp))
+                CardSurface {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onCompare(recommendation.requestId) },
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            SectionTitle("Compare pack choices", Indigo500)
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "See recommended, lower-cost and sustainable structures side by side.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Gray500
+                            )
+                        }
+                        Icon(Icons.Default.ArrowForward, null, tint = Indigo500, modifier = Modifier.size(18.dp))
+                    }
+                }
+            }
 
             Spacer(Modifier.height(14.dp))
             CardSurface {
@@ -189,6 +214,12 @@ private fun ReportHeader(recommendation: RecommendationResponse, onBack: () -> U
             recommendation.commodity.form?.let {
                 Text(it, style = MaterialTheme.typography.bodySmall, color = Gray500)
             }
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "Demo data · barrier values illustrative, not measured",
+                style = MaterialTheme.typography.labelSmall,
+                color = Amber500
+            )
         }
         IconButton(onClick = onBack) {
             Icon(Icons.Default.Close, "Close report", tint = Gray300)

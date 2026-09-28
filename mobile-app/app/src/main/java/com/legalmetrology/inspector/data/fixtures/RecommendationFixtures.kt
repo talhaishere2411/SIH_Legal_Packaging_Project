@@ -15,6 +15,25 @@ import com.legalmetrology.inspector.domain.model.SourceKind
 import com.legalmetrology.inspector.domain.model.SourceRef
 import com.legalmetrology.inspector.domain.model.StorageType
 
+/** Buckets used by the offline scenario matrix. */
+enum class ShelfLifeBucket {
+    SHORT,   // up to 1 month
+    MEDIUM,  // 1–6 months
+    LONG     // more than 6 months
+}
+
+data class ScenarioKey(
+    val commodityId: String,
+    val shelfLife: ShelfLifeBucket,
+    val storage: StorageType
+)
+
+fun shelfLifeBucket(days: Int): ShelfLifeBucket = when {
+    days <= 30 -> ShelfLifeBucket.SHORT
+    days <= 180 -> ShelfLifeBucket.MEDIUM
+    else -> ShelfLifeBucket.LONG
+}
+
 // ============================================================
 // DEMO FIXTURES
 //
@@ -788,7 +807,110 @@ private val REC_CHILLI = RecommendationResponse(
     )
 )
 
-/** Canned responses keyed by commodity id. */
+// --- Scenario matrix -------------------------------------------------------
+//
+// This is deliberately data, not pretend physics. It lets the demo show the
+// product behaviour the eventual barrier calculator will provide: changing
+// the requested horizon can select a different structure, target window and
+// MAP note. Every derived response keeps its numbers internally coherent.
+
+private val REC_PEANUT_SHORT = REC_PEANUT.copy(
+    requestId = "fx-peanut-short-ambient",
+    assumptions = listOf(
+        "Scenario selected for a target shelf life of up to 30 days at ambient storage.",
+        "Pack assumed 100 g retail pillow pack, surface area ≈ 0.032 m².",
+        "Short horizon permits PET / LDPE while still protecting against moisture and light."
+    ),
+    recommended = M_PET_PE,
+    barriers = BarrierSpec(
+        otrTargetMax = 80.0,
+        wvtrTargetMax = 10.0,
+        rationale = "For a short ambient horizon, the oxygen budget is less demanding than " +
+            "the six-month case. The target still keeps roasted peanuts away from rapid " +
+            "rancidity, but does not justify the foil or metalized layer used for longer life.",
+        source = SRC_CALC
+    ),
+    map = REC_PEANUT.map?.copy(
+        expectedShelfLifeDays = 30,
+        notes = "A short claim can run with a simpler pack. Nitrogen flushing is still " +
+            "helpful for headspace oxygen, but the six-month barrier is not needed."
+    ),
+    alternatives = listOf(
+        Alternative(AlternativeKind.HIGHER_BARRIER, M_METPET_PE, "Adds a longer-life oxygen margin at a higher cost."),
+        Alternative(AlternativeKind.SUSTAINABLE, M_HB_PLA, "Compostable, but moisture protection is weaker and humidity must be controlled."),
+        Alternative(AlternativeKind.CHEAPER, M_LDPE_50, "Cheaper, but its OTR 4500 is far above the short-horizon target of 80.")
+    ),
+    narrative = "For roasted peanuts with a short ambient claim, PET / LDPE is enough " +
+        "to protect the pack without paying for a foil barrier. The target is OTR " +
+        "below 80 cm³/m²·day and WVTR below 10 g/m²·day for this scenario. If the " +
+        "claim moves to six months, the answer changes to a metalized laminate because " +
+        "the accumulated oxidation risk changes the barrier requirement.",
+    followUps = listOf(
+        "What changes for a 6-month claim?",
+        "What is the cheapest option?",
+        "Can I use a compostable film?"
+    )
+)
+
+private val REC_PEANUT_LONG = REC_PEANUT.copy(
+    requestId = "fx-peanut-long-ambient",
+    assumptions = listOf(
+        "Scenario selected for a target shelf life beyond 6 months at ambient storage.",
+        "Pack assumed 100 g retail pillow pack, surface area ≈ 0.032 m².",
+        "Hot and humid distribution is treated as a higher-risk route."
+    ),
+    recommended = M_FOIL_LAM,
+    barriers = BarrierSpec(
+        otrTargetMax = 0.1,
+        wvtrTargetMax = 0.1,
+        rationale = "Beyond six months, roasted peanuts need a near-foil barrier. The " +
+            "tighter oxygen and moisture targets provide margin for hot, humid storage " +
+            "and keep oxidation from becoming the first failure mode.",
+        source = SRC_CALC
+    ),
+    map = REC_PEANUT.map?.copy(
+        expectedShelfLifeDays = 540,
+        notes = "Use nitrogen flushing and verify residual oxygen at packing. A foil " +
+            "laminate is selected here because the longer claim leaves little oxygen budget."
+    ),
+    alternatives = listOf(
+        Alternative(
+            AlternativeKind.CHEAPER,
+            M_METPET_PE,
+            "The six-month metalized web is cheaper, but its OTR 0.8 misses the long-life target of ≤0.1."
+        ),
+        Alternative(
+            AlternativeKind.SUSTAINABLE,
+            M_HB_PLA,
+            "Compostable, but OTR 12 and WVTR 25 both miss the long-life window."
+        )
+    ),
+    narrative = "For a claim beyond six months, the answer steps up to PET / aluminium " +
+        "foil / LDPE. Its OTR of 0.05 and WVTR of 0.02 sit inside the stricter long-life " +
+        "window, providing margin that the six-month metalized structure does not. " +
+        "This is a scenario illustration; the converter must verify the finished web.",
+    followUps = listOf(
+        "Why foil instead of metalized PET?",
+        "What is the cheapest option?",
+        "Can I use a compostable film?"
+    )
+)
+
+private val REC_PEANUT_MEDIUM_CHILLED = REC_PEANUT.copy(
+    requestId = "fx-peanut-medium-chilled",
+    assumptions = REC_PEANUT.assumptions +
+        "Scenario selected for 1–6 months in chilled storage; cold storage slows oxidation but does not remove the barrier requirement.",
+    map = REC_PEANUT.map?.copy(
+        storageTempC = "0–8 °C, chilled",
+        notes = "Chilling slows oxidation, but keep the metalized oxygen barrier because " +
+            "condensation and temperature excursions can occur in distribution."
+    ),
+    narrative = REC_PEANUT.narrative +
+        " Because this scenario is chilled, the oxidation rate is lower, but the " +
+        "same metalized structure is retained as protection against temperature excursions."
+)
+
+/** Canned responses keyed by commodity id — the default for each profile. */
 val FIXTURE_RECOMMENDATIONS: Map<String, RecommendationResponse> = mapOf(
     "peanut-roasted" to REC_PEANUT,
     "okra-fresh" to REC_OKRA,
@@ -798,11 +920,24 @@ val FIXTURE_RECOMMENDATIONS: Map<String, RecommendationResponse> = mapOf(
 )
 
 /**
- * Shelf life each canned example was worked out for, in days.
- *
- * Used by the chat to detect when the user asked about a different
- * horizon than the example covers, so it can say so instead of quietly
- * disagreeing with them. Goes away once the backend recalculates live.
+ * Exact scenario lookup table for the local demo. Missing cells are resolved
+ * to the nearest bucket and are called out in assumptions by the repository;
+ * they are never silently treated as an exact calculation.
+ */
+val FIXTURE_SCENARIOS: Map<ScenarioKey, RecommendationResponse> = mapOf(
+    ScenarioKey("peanut-roasted", ShelfLifeBucket.SHORT, StorageType.AMBIENT) to REC_PEANUT_SHORT,
+    ScenarioKey("peanut-roasted", ShelfLifeBucket.MEDIUM, StorageType.AMBIENT) to REC_PEANUT,
+    ScenarioKey("peanut-roasted", ShelfLifeBucket.LONG, StorageType.AMBIENT) to REC_PEANUT_LONG,
+    ScenarioKey("peanut-roasted", ShelfLifeBucket.MEDIUM, StorageType.CHILLED) to REC_PEANUT_MEDIUM_CHILLED,
+    ScenarioKey("okra-fresh", ShelfLifeBucket.SHORT, StorageType.CHILLED) to REC_OKRA,
+    ScenarioKey("mango-fresh", ShelfLifeBucket.SHORT, StorageType.AMBIENT) to REC_MANGO,
+    ScenarioKey("milk-powder", ShelfLifeBucket.LONG, StorageType.AMBIENT) to REC_MILK_POWDER,
+    ScenarioKey("chilli-powder", ShelfLifeBucket.LONG, StorageType.AMBIENT) to REC_CHILLI
+)
+
+/**
+ * Shelf life each default canned example was worked out for, in days.
+ * Used as the default when the user does not state a horizon.
  */
 val FIXTURE_SHELF_LIFE_DAYS: Map<String, Int> = mapOf(
     "peanut-roasted" to 180,
@@ -811,6 +946,52 @@ val FIXTURE_SHELF_LIFE_DAYS: Map<String, Int> = mapOf(
     "milk-powder" to 365,
     "chilli-powder" to 365
 )
+
+// --- Follow-up answer bank -------------------------------------------------
+// Answers are canned deliberately, but their figures are copied from the
+// same illustrative materials and targets shown in the report.
+val FIXTURE_FOLLOW_UP_ANSWERS: Map<Pair<String, String>, String> = mapOf(
+    ("peanut-roasted" to "shorter-claim") to "At 30 days the demo can use PET / LDPE: its OTR is 60 against a target of ≤80. At six months the target tightens to ≤1, so the recommendation changes to metalized PET / Al / LDPE.",
+    ("peanut-roasted" to "cheapest") to "The lower-cost PET / LDPE option is cost index 3, but its OTR is 60 against the six-month target of ≤1. It is cheaper only if you also accept a shorter claim.",
+    ("peanut-roasted" to "sustainable") to "The metallized PLA option is compostable to IS/ISO 17088, but its OTR is 12 and WVTR is 25. That misses the six-month targets of ≤1 and ≤1, so it needs a shorter claim and humidity control.",
+    ("peanut-roasted" to "nitrogen") to "Nitrogen flushing is strongly recommended for the six-month peanut fixture because it reduces initial headspace oxygen. It does not replace the laminate: the OTR target is still ≤1 cm³/m²·day.",
+    ("peanut-roasted" to "compliance") to "The laminate is not automatically approved by its structure alone: test the finished pack to the 60 mg/kg or 10 mg/dm² overall migration limit, use virgin food-contact layers, and keep print on the outer web.",
+    ("okra-fresh" to "perforation") to "The micro-perforation is tuned to pack weight because okra needs an OTR window of 5,000–10,000. More open area raises oxygen exchange; too little can drive the pack anaerobic.",
+    ("okra-fresh" to "cold-chain") to "The fixture assumes 8–10 °C and about 10 marketable days. Okra is chilling-sensitive below roughly 7 °C, so a colder truck is not automatically safer.",
+    ("okra-fresh" to "alternative") to "Broccoli is also respiring produce, but its respiration rate and pack weight are different. Reuse the MAP method, not the exact perforation count.",
+    ("mango-fresh" to "cold-chain") to "Mango is climacteric: the fixture targets 3–5% O₂, 5–8% CO₂ and about 13 °C for 21 days. Below about 10 °C, chilling injury can outweigh the extra cooling benefit.",
+    ("mango-fresh" to "alternative") to "Individually shrink-wrapping fruit can change gas exchange and condensation. The 3,000–6,000 OTR window must be rechecked for the new pack surface area.",
+    ("mango-fresh" to "compliance") to "For the food-contact web, verify the LDPE layer against IS 2508 and test the finished structure for overall migration before production.",
+    ("milk-powder" to "shorter-claim") to "At six months, metalized PET / Al / LDPE is the lower-cost alternative shown in the report. For the 12-month target, foil is selected because WVTR 0.02 is below the ≤0.1 target.",
+    ("milk-powder" to "composite") to "A composite can can improve handling and moisture protection, but it does not remove the need to verify the food-contact liner and the finished pack's migration result.",
+    ("milk-powder" to "scavenger") to "Nitrogen flushing reduces initial oxygen and an oxygen scavenger can add margin, but neither substitutes for the foil laminate's WVTR target of ≤0.1 g/m²·day.",
+    ("chilli-powder" to "light") to "Light is the important extra risk for chilli: the metalized outer web blocks it while the OTR of 0.8 remains below the ≤20 target. A clear PET pack would not provide that light protection.",
+    ("chilli-powder" to "alternative") to "The high-barrier PLA option is compostable and has OTR 12 against a target of ≤20, but its WVTR 25 is above the ≤5 moisture target. Humidity control is the trade-off.",
+    ("chilli-powder" to "sustainable") to "The high-barrier PLA route is the compostable option in this fixture: OTR 12 fits the ≤20 oxygen target, but WVTR 25 misses the ≤5 moisture target unless humidity is controlled.",
+    ("chilli-powder" to "compliance") to "Keep printed surfaces away from food contact and specify IS 15495 inks and IS 9833 pigments; also test the finished pack to the overall migration limit."
+)
+
+/** Resolves a natural-language chip to an answer-bank id. */
+fun followUpId(prompt: String): String? {
+    val q = prompt.lowercase()
+    return when {
+        "nitrogen" in q -> "nitrogen"
+        "perforation" in q || "calculate" in q -> "perforation"
+        "cold chain" in q || "refrigeration" in q || "ship" in q -> "cold-chain"
+        "broccoli" in q || "turmeric" in q || "shrink" in q || "sea" in q -> "alternative"
+        "composite" in q -> "composite"
+        "scavenger" in q -> "scavenger"
+        "light" in q || "fading" in q -> "light"
+        "legal" in q || "food contact" in q || "compliance" in q -> "compliance"
+        "compost" in q || "sustainable" in q -> "sustainable"
+        "cheapest" in q || "cost" in q -> "cheapest"
+        "3-month" in q || "6-month" in q || "short" in q || "changes" in q -> "shorter-claim"
+        else -> null
+    }
+}
+
+fun fixtureFollowUpAnswer(commodityId: String, prompt: String): String? =
+    followUpId(prompt)?.let { FIXTURE_FOLLOW_UP_ANSWERS[commodityId to it] }
 
 /** Example prompts for the empty chat state. */
 val FIXTURE_SUGGESTIONS: List<String> = listOf(

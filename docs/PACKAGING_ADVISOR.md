@@ -1,9 +1,10 @@
 # Packaging Advisor — Module 1
 
-> **Status: skeleton.** Frontend contract and UI exist; no backend, no curated
-> materials dataset, and **the Kotlin in this branch has never been compiled**
-> (see [Verification status](#11-verification-status)). Everything below that is
-> marked *planned* is design, not working code.
+> **Status: offline demo skeleton.** Frontend contract, fixture repository and
+> Packaging Advisor UI exist; there is no backend or curated materials dataset.
+> The pure Kotlin domain/fixture/chat logic compiles with Kotlin/JVM, while the
+> full Android build is still pending (see [Verification status](#11-verification-status)).
+> Everything below that is marked *planned* is design, not working code.
 
 ---
 
@@ -188,8 +189,15 @@ What film keeps chilli powder from fading?
 ```
 
 Shelf life and storage type typed into the message are parsed out of the text and
-reconciled against the fixture's stored value; a mismatch produces an assumption
-note rather than a silent override.
+resolved through a local scenario matrix keyed by commodity, `SHORT` (up to one
+month), `MEDIUM` (one to six months) and `LONG` (beyond six months), plus storage
+type. The peanut walkthrough changes from PET / LDPE at 30 days, to metalized
+PET / Al / LDPE at six months, to foil / LDPE beyond six months. If a cell is not
+authored, the nearest scenario is shown with an explicit assumption note rather
+than inventing a number. The profile card can be edited for moisture, fat, pH and
+storage, which re-runs the selected fixture scenario. Follow-up chips use a
+commodity-scoped answer bank; the report also exposes a side-by-side comparison
+view and a guided peanut demo.
 
 ## 9. Data honesty
 
@@ -237,13 +245,17 @@ itself does not forbid.
 
 ## 11. Verification status
 
-**This branch has not been compiled.** The development sandbox has no JVM,
-Kotlin or Gradle toolchain on disk and no Maven mirror is reachable, so neither
-the wrapper distribution nor any dependency could be fetched. `./gradlew
-assembleDebug` has never run against this code.
+**Verification is partial.** The pure Kotlin domain, fixture repository and chat
+ViewModel now compile with Kotlin/JVM 2.4.20 and `-Werror`. A smoke check covers
+the scenario matrix, barrier-window coherence and follow-up answer-bank lookup.
 
-What was done instead: a static pass over the whole Kotlin tree —
-**508 checks**, all passing:
+The requested `./gradlew assembleDebug` was also attempted. The wrapper starts,
+but this sandbox cannot complete the Gradle 8.13 distribution download because
+its TLS connection to `services.gradle.org` is blocked. Android dependencies were
+therefore not resolved, so Compose, Hilt and Android resource compatibility still
+need a normal Android/Gradle environment.
+
+The earlier static pass over the whole Kotlin tree recorded **508 checks**:
 
 | Check | Sites |
 |---|---|
@@ -258,13 +270,11 @@ all 5 were caught. One residual flag
 (`MockInspectionApiService.kt:91 request.email`) is a known tool artifact, not a
 code defect.
 
-**What static analysis cannot tell us** — and therefore what is still real risk
-until the first build:
+**What still needs the first Android build:**
 
-- Type compatibility (a `String` where an `Int` is expected)
-- Nullability
-- Generics and overload resolution against library functions
-- Whether Compose API parameter names match Compose BOM 2024.12.01
+- Compose API parameter names and overload resolution against BOM 2024.12.01
+- Hilt generated binding validation
+- Android resource, manifest and CameraX/OpenCV dependency resolution
 
 **Run this first:**
 

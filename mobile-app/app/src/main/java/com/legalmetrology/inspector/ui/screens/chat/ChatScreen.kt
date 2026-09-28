@@ -1,6 +1,7 @@
 package com.legalmetrology.inspector.ui.screens.chat
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,11 +27,13 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.Icon
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.legalmetrology.inspector.ui.theme.Gray100
 import com.legalmetrology.inspector.ui.theme.Gray300
+import com.legalmetrology.inspector.domain.model.CommodityProfile
+import com.legalmetrology.inspector.domain.model.StorageType
+import com.legalmetrology.inspector.ui.theme.Emerald500
 import com.legalmetrology.inspector.ui.theme.Gray500
 import com.legalmetrology.inspector.ui.theme.Indigo500
 import com.legalmetrology.inspector.ui.theme.Navy600
@@ -70,6 +76,7 @@ fun ChatScreen(
 ) {
     val listState = rememberLazyListState()
     var draft by remember { mutableStateOf("") }
+    var editingProfile by remember { mutableStateOf<com.legalmetrology.inspector.domain.model.CommodityProfile?>(null) }
 
     // Keep the newest message in view.
     LaunchedEffect(viewModel.messages.size, viewModel.isThinking) {
@@ -115,14 +122,21 @@ fun ChatScreen(
                 )
             ) {
                 if (viewModel.messages.isEmpty()) {
-                    item { EmptyState(viewModel.suggestions) { viewModel.send(it) } }
+                    item {
+                        EmptyState(
+                            suggestions = viewModel.suggestions,
+                            onPick = { viewModel.send(it) },
+                            onPlayDemo = { viewModel.playDemo() }
+                        )
+                    }
                 }
 
                 items(viewModel.messages, key = { it.id }) { message ->
                     ChatBubble(
                         message = message,
                         onOpenReport = { it.requestId.let(onOpenReport) },
-                        onSuggestion = { viewModel.send(it) }
+                        onSuggestion = { viewModel.send(it) },
+                        onEditProfile = { editingProfile = it }
                     )
                 }
 
@@ -141,6 +155,17 @@ fun ChatScreen(
                 sendEnabled = draft.isNotBlank() && !viewModel.isThinking
             )
         }
+    }
+
+    editingProfile?.let { profile ->
+        ProfileEditorDialog(
+            profile = profile,
+            onDismiss = { editingProfile = null },
+            onSave = { edits ->
+                viewModel.editProfile(profile.id, edits)
+                editingProfile = null
+            }
+        )
     }
 }
 
@@ -201,7 +226,11 @@ private fun ChatTopBar(
 // --- Empty state -----------------------------------------------------------
 
 @Composable
-private fun EmptyState(suggestions: List<String>, onPick: (String) -> Unit) {
+private fun EmptyState(
+    suggestions: List<String>,
+    onPick: (String) -> Unit,
+    onPlayDemo: () -> Unit
+) {
     Column(modifier = Modifier.padding(top = 12.dp)) {
         CardSurface {
             Icon(Icons.Default.AutoAwesome, null, tint = Indigo500, modifier = Modifier.size(22.dp))
@@ -221,12 +250,93 @@ private fun EmptyState(suggestions: List<String>, onPick: (String) -> Unit) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = Gray300
             )
+            Spacer(Modifier.height(14.dp))
+            Text(
+                "▶  Play the 6-month peanut demo",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onPlayDemo)
+                    .background(Navy700, RoundedCornerShape(10.dp))
+                    .padding(horizontal = 12.dp, vertical = 11.dp),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = Emerald500
+            )
             Spacer(Modifier.height(16.dp))
-            Text("Try one of these", style = MaterialTheme.typography.labelMedium, color = Gray500)
+            Text("Or try one of these", style = MaterialTheme.typography.labelMedium, color = Gray500)
             Spacer(Modifier.height(8.dp))
             QuickReplyRow(suggestions = suggestions, onClick = onPick)
         }
     }
+}
+
+@Composable
+private fun ProfileEditorDialog(
+    profile: CommodityProfile,
+    onDismiss: () -> Unit,
+    onSave: (ProfileEdits) -> Unit
+) {
+    var moisture by remember { mutableStateOf(profile.moisturePct?.toString().orEmpty()) }
+    var fat by remember { mutableStateOf(profile.fatPct?.toString().orEmpty()) }
+    var ph by remember { mutableStateOf(profile.ph?.toString().orEmpty()) }
+    var storage by remember { mutableStateOf(profile.defaultStorage) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Correct product profile") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    "These values are your inputs. The demo selects the nearest authored scenario and flags the assumption in the report.",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                OutlinedTextField(
+                    value = moisture,
+                    onValueChange = { moisture = it },
+                    label = { Text("Moisture (%)") },
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = fat,
+                    onValueChange = { fat = it },
+                    label = { Text("Fat (%)") },
+                    singleLine = true
+                )
+                OutlinedTextField(
+                    value = ph,
+                    onValueChange = { ph = it },
+                    label = { Text("pH") },
+                    singleLine = true
+                )
+                Text("Storage", style = MaterialTheme.typography.labelMedium)
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    StorageType.values().forEach { option ->
+                        TextButton(onClick = { storage = option }) {
+                            Text(
+                                option.displayName,
+                                fontWeight = if (storage == option) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onSave(
+                        ProfileEdits(
+                            moisturePct = moisture.toDoubleOrNull(),
+                            fatPct = fat.toDoubleOrNull(),
+                            ph = ph.toDoubleOrNull(),
+                            storage = storage
+                        )
+                    )
+                }
+            ) { Text("Re-run recommendation") }
+        }
+    )
 }
 
 // --- Composer --------------------------------------------------------------

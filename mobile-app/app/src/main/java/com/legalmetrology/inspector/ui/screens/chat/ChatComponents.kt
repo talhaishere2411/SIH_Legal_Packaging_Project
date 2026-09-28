@@ -97,7 +97,8 @@ internal fun fmt(value: Double): String {
 fun ChatBubble(
     message: ChatMessage,
     onOpenReport: (RecommendationResponse) -> Unit,
-    onSuggestion: (String) -> Unit
+    onSuggestion: (String) -> Unit,
+    onEditProfile: (CommodityProfile) -> Unit
 ) {
     val isUser = message.role == ChatRole.USER
 
@@ -128,7 +129,7 @@ fun ChatBubble(
                 )
                 message.profile?.let {
                     Spacer(Modifier.height(10.dp))
-                    ProfileCard(profile = it)
+                    ProfileCard(profile = it, onEdit = { onEditProfile(it) })
                 }
                 message.recommendation?.let {
                     Spacer(Modifier.height(10.dp))
@@ -178,7 +179,7 @@ fun TypingIndicator() {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProfileCard(profile: CommodityProfile) {
+fun ProfileCard(profile: CommodityProfile, onEdit: () -> Unit) {
     CardSurface {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(Icons.Default.Science, null, tint = Indigo500, modifier = Modifier.size(18.dp))
@@ -194,6 +195,14 @@ fun ProfileCard(profile: CommodityProfile) {
                 Text(it, style = MaterialTheme.typography.labelSmall, color = Gray500)
             }
         }
+
+        Spacer(Modifier.height(8.dp))
+        Text(
+            "Tap to correct profile values before re-running",
+            modifier = Modifier.clickable(onClick = onEdit),
+            style = MaterialTheme.typography.labelSmall,
+            color = Indigo200
+        )
 
         Spacer(Modifier.height(12.dp))
         FlowRow(
@@ -560,12 +569,15 @@ fun CitationRow(citations: List<Citation>) {
 // --- Shared surface --------------------------------------------------------
 
 @Composable
-fun CardSurface(content: @Composable () -> Unit) {
+fun CardSurface(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
     Surface(
         shape = RoundedCornerShape(16.dp),
         color = Navy800,
         border = androidx.compose.foundation.BorderStroke(1.dp, Navy600),
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().then(modifier)
     ) {
         Column(modifier = Modifier.padding(16.dp)) { content() }
     }

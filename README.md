@@ -7,11 +7,15 @@ regulation, standard or calculation every number came from.
 Built for Smart India Hackathon 2026 (SIH). Mobile-first: Android (Kotlin +
 Jetpack Compose) today, Python/FastAPI backend next.
 
-> **Status: working skeleton, not yet compiled.** The mobile app runs the full
-> chat → recommendation → report flow offline against curated fixtures. The
-> backend, the curated materials dataset and the RAG corpus do not exist yet.
-> The Kotlin in this branch passes 508 static checks but has **never been
-> through `kotlinc`** — see [Verification status](#10-verification-status).
+> **Status: working offline demo skeleton.** The mobile app runs the full
+> chat → recommendation → report flow against curated fixtures. The demo now
+> includes a shelf-life/storage scenario matrix, editable profile card,
+> follow-up answer bank, comparison view and guided peanut walkthrough. The
+> backend, curated materials dataset and RAG corpus do not exist yet. The pure
+> Kotlin domain/fixture/chat logic compiles with Kotlin/JVM and the barrier
+> scenario smoke check passes; the full Android Gradle build remains pending
+> because this sandbox cannot download Gradle 8.13 over TLS — see
+> [Verification status](#10-verification-status).
 
 ---
 
@@ -448,13 +452,18 @@ Five canned commodities, chosen to exercise every engine branch:
 
 ## 10. Verification status
 
-**This branch has not been compiled.** The development sandbox has no JVM, Kotlin
-or Gradle toolchain on disk and no Maven mirror is reachable, so neither the
-wrapper distribution nor any dependency could be fetched. `./gradlew
-assembleDebug` has never run against this code.
+**Verification is partial.** The pure Kotlin domain, fixture repository and chat
+ViewModel now compile with Kotlin/JVM 2.4.20 and `-Werror`. A smoke check covers
+all three peanut shelf-life scenarios, the chilled storage cell, barrier-window
+coherence and follow-up answer-bank lookup.
 
-What was done instead: a static pass over the whole Kotlin tree — **508 checks**,
-all passing.
+The requested `./gradlew assembleDebug` was also attempted. The wrapper starts,
+but this sandbox cannot complete the Gradle 8.13 distribution download because
+its TLS connection to `services.gradle.org` is blocked. No Android dependencies
+were therefore resolved, so Compose, Hilt, Android manifest and resource
+compatibility still need a normal Android/Gradle environment.
+
+The earlier static pass over the Kotlin tree recorded **508 checks**:
 
 | Check | Sites |
 |---|---|
@@ -468,12 +477,11 @@ The checker was validated by injecting 5 deliberate faults into a throwaway file
 all 5 were caught. One residual flag (`MockInspectionApiService.kt:91`) is a known
 tool artifact, not a code defect.
 
-**What static analysis cannot tell us** — real risk until the first build:
+**What still needs the first Android build:**
 
-- Type compatibility (a `String` where an `Int` is expected)
-- Nullability
-- Generics and overload resolution against library functions
-- Whether Compose API parameter names match Compose BOM 2024.12.01
+- Compose API parameter names and overload resolution against BOM 2024.12.01
+- Hilt generated binding validation
+- Android resource, manifest and CameraX/OpenCV dependency resolution
 
 **Known gaps**
 
@@ -483,7 +491,9 @@ tool artifact, not a code defect.
 - `RecommendationCache` is in-memory; process death loses saved reports (Room is
   the TODO).
 - Retrofit is declared but unused; no networking code exists yet.
-- No history / saved-reports screen; the profile card renders but is not editable.
+- No history / saved-reports screen for Packaging Advisor reports; the profile
+  card is editable in-session, but edits remain fixture assumptions until the
+  backend recalculates them.
 
 ## 11. Roadmap
 

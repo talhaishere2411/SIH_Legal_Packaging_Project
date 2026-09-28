@@ -34,4 +34,15 @@ interface RecommendationRepository {
      * rather than guess.
      */
     suspend fun recommend(request: RecommendationRequest): RecommendationResponse?
+
+    /**
+     * Answers a structured quick-reply about the current recommendation.
+     * The fixture implementation uses a local answer bank; the network
+     * implementation can map this to a follow-up endpoint later.
+     */
+    suspend fun answerFollowUp(
+        commodityId: String,
+        prompt: String,
+        recommendation: RecommendationResponse
+    ): String?
 }

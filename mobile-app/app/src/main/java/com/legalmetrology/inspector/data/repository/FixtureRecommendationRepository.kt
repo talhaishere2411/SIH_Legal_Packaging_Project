@@ -2,7 +2,12 @@ package com.legalmetrology.inspector.data.repository
 
 import com.legalmetrology.inspector.data.fixtures.FIXTURE_COMMODITIES
 import com.legalmetrology.inspector.data.fixtures.FIXTURE_RECOMMENDATIONS
+import com.legalmetrology.inspector.data.fixtures.FIXTURE_SCENARIOS
+import com.legalmetrology.inspector.data.fixtures.FIXTURE_SHELF_LIFE_DAYS
 import com.legalmetrology.inspector.data.fixtures.FIXTURE_SUGGESTIONS
+import com.legalmetrology.inspector.data.fixtures.ScenarioKey
+import com.legalmetrology.inspector.data.fixtures.fixtureFollowUpAnswer
+import com.legalmetrology.inspector.data.fixtures.shelfLifeBucket
 import com.legalmetrology.inspector.domain.model.CommodityProfile
 import com.legalmetrology.inspector.domain.model.RecommendationRequest
 import com.legalmetrology.inspector.domain.model.RecommendationResponse
@@ -22,7 +27,7 @@ import com.legalmetrology.inspector.domain.repository.RecommendationRepository
  * bind it in the Hilt module instead. Nothing above the interface
  * needs to change.
  */
-class FixtureRecommendationRepository : RecommendationRepository {
+class FixtureRecommendationRepository @javax.inject.Inject constructor() : RecommendationRepository {
 
     override suspend fun getSuggestions(): List<String> = FIXTURE_SUGGESTIONS
 
@@ -35,7 +40,65 @@ class FixtureRecommendationRepository : RecommendationRepository {
             ?: matchCommodity(request.query)
             ?: return null
 
-        return FIXTURE_RECOMMENDATIONS[profile.id]
+        val defaultDays = FIXTURE_SHELF_LIFE_DAYS[profile.id] ?: 180
+        val requestedDays = request.shelfLifeDays ?: defaultDays
+        val requestedStorage = request.storage ?: profile.defaultStorage
+        val requestedBucket = shelfLifeBucket(requestedDays)
+        val exactKey = ScenarioKey(profile.id, requestedBucket, requestedStorage)
+        val exact = FIXTURE_SCENARIOS[exactKey]
+        if (exact != null) return applyRequestMetadata(exact, request, exactMatch = true)
+
+        // A missing cell is not an excuse to invent a number. Pick the
+        // nearest authored bucket for this commodity/storage, then say so.
+        val sameStorage = FIXTURE_SCENARIOS
+            .filterKeys { it.commodityId == profile.id && it.storage == requestedStorage }
+        val nearest = sameStorage.entries.minByOrNull {
+            kotlin.math.abs(it.key.shelfLife.ordinal - requestedBucket.ordinal)
+        }?.value
+        if (nearest != null) {
+            return applyRequestMetadata(nearest, request, exactMatch = false)
+        }
+
+        // Finally use the commodity's authored default. This is the safe
+        // fallback for unsupported storage types such as frozen peanuts.
+        return FIXTURE_RECOMMENDATIONS[profile.id]?.let {
+            applyRequestMetadata(it, request, exactMatch = false)
+        }
+    }
+
+    override suspend fun answerFollowUp(
+        commodityId: String,
+        prompt: String,
+        recommendation: RecommendationResponse
+    ): String? = fixtureFollowUpAnswer(commodityId, prompt)
+
+    private fun applyRequestMetadata(
+        response: RecommendationResponse,
+        request: RecommendationRequest,
+        exactMatch: Boolean
+    ): RecommendationResponse {
+        val requestedDays = request.shelfLifeDays
+        val requestedStorage = request.storage
+        val notes = buildList {
+            if (!exactMatch && requestedDays != null) {
+                add(
+                    "No exact local scenario is authored for ${requestedDays} days; " +
+                        "the nearest authored scenario is shown and this limitation is recorded."
+                )
+            }
+            if (!exactMatch && requestedStorage != null && requestedStorage != response.commodity.defaultStorage) {
+                add("Storage ${requestedStorage.displayName} is not separately calibrated for this commodity; the default fixture is shown with this limitation.")
+            }
+            if (request.overrides.isNotEmpty()) {
+                add("Profile overrides supplied: ${request.overrides.entries.joinToString { "${it.key} ${it.value}" }}. The demo keeps the authored scenario values and flags the override for review.")
+            }
+        }
+        if (notes.isEmpty()) return response
+
+        return response.copy(
+            requestId = "${response.requestId}-${requestedDays ?: "default"}-${requestedStorage?.name?.lowercase() ?: "default"}",
+            assumptions = response.assumptions + notes
+        )
     }
 
     // --- matching ----------------------------------------------------------

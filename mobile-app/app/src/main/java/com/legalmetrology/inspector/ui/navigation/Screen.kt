@@ -29,4 +29,8 @@ sealed class Screen(val route: String) {
     object PackagingReport : Screen("packaging_report/{requestId}") {
         fun createRoute(requestId: String) = "packaging_report/$requestId"
     }
+    /** Side-by-side comparison of the report's material choices. */
+    object PackagingComparison : Screen("packaging_comparison/{requestId}") {
+        fun createRoute(requestId: String) = "packaging_comparison/$requestId"
+    }
 }

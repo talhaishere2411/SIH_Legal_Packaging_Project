@@ -14,6 +14,7 @@ import com.legalmetrology.inspector.ui.screens.ecommerce.ECommerceScreen
 import com.legalmetrology.inspector.ui.screens.history.HistoryScreen
 import com.legalmetrology.inspector.ui.screens.login.LoginScreen
 import com.legalmetrology.inspector.ui.screens.onboarding.OnboardingScreen
+import com.legalmetrology.inspector.ui.screens.report.PackagingComparisonScreen
 import com.legalmetrology.inspector.ui.screens.report.PackagingReportScreen
 import com.legalmetrology.inspector.ui.screens.report.ReportScreen
 import com.legalmetrology.inspector.ui.screens.review.ReviewScreen
@@ -171,8 +172,15 @@ fun AppNavGraph(navController: NavHostController) {
                 onBack = { navController.navigateUp() },
                 onValidateLabel = {
                     navController.navigate(Screen.Onboarding.route)
+                },
+                onCompare = { requestId ->
+                    navController.navigate(Screen.PackagingComparison.createRoute(requestId))
                 }
             )
+        }
+
+        composable(Screen.PackagingComparison.route) {
+            PackagingComparisonScreen(onBack = { navController.navigateUp() })
         }
 
         composable(Screen.ECommerce.route) {
