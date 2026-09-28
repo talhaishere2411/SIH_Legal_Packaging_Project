@@ -24,7 +24,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.Icon
 import androidx.compose.material3.AlertDialog
@@ -56,6 +58,7 @@ import com.legalmetrology.inspector.ui.theme.Indigo500
 import com.legalmetrology.inspector.ui.theme.Navy600
 import com.legalmetrology.inspector.ui.theme.Navy700
 import com.legalmetrology.inspector.ui.theme.Navy900
+import com.legalmetrology.inspector.ui.theme.ThemeMode
 import com.legalmetrology.inspector.ui.theme.White
 
 /**
@@ -215,6 +218,13 @@ private fun ChatTopBar(
             }
         }
         Row {
+            IconButton(onClick = { ThemeMode.toggle() }) {
+                Icon(
+                    imageVector = if (ThemeMode.isLight) Icons.Default.DarkMode else Icons.Default.LightMode,
+                    contentDescription = if (ThemeMode.isLight) "Switch to dark mode" else "Switch to light mode",
+                    tint = Gray300
+                )
+            }
             IconButton(onClick = onOpenLabelValidator) {
                 Icon(Icons.Default.QrCodeScanner, "Validate a printed design", tint = Gray300)
             }
