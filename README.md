@@ -4,6 +4,34 @@ Software system to check compliance of packaged commodities under the [Legal Met
 
 Built for Smart India Hackathon 2026 (SIH).
 
+## Project Direction — updated September 2026
+
+The project has pivoted. This repo now carries **two modules**, with the original
+one demoted to a side feature:
+
+| Module | What it is | Status |
+|---|---|---|
+| **Module 1 — Packaging Advisor** | An AI consultant that takes a commodity (moisture, fat, pH, respiration, target shelf life, storage conditions) and recommends a packaging material plus full specification: OTR, WVTR, thickness, sealability, MAP suitability, compliance notes and citations. | **Primary system.** Skeleton built; runs offline on fixtures. |
+| **Module 2 — ArUco label validator** | The original scanning pipeline, repurposed as a label & layout validator with an L1 / L2 / L3 tri-tier verdict. | **Side feature.** Pre-existing code, untouched. |
+
+Everything below this section is the **original** Legal Metrology write-up and
+still describes Module 2. It is kept as-is because it documents the law that
+Module 2 enforces.
+
+For Module 1, read:
+
+- **[`docs/PACKAGING_ADVISOR.md`](docs/PACKAGING_ADVISOR.md)** — the design: three
+  data stores (Postgres / pgvector / versioned rules), the grounding contract, the
+  8-step pipeline, the response contract, demo mode, and what is real vs. stubbed.
+- **[`docs/architecture-v2.svg`](docs/architecture-v2.svg)** — the architecture
+  diagram.
+
+> **The Module 1 Kotlin has not been compiled yet.** It passes 508 static checks
+> but has never been through `kotlinc`, because the development environment has no
+> JVM or Gradle toolchain. Run `cd mobile-app && ./gradlew assembleDebug` before
+> trusting it. See
+> [Verification status](docs/PACKAGING_ADVISOR.md#11-verification-status).
+
 ## Actual Problem Statement by Ministry
 
 Packaged commodities are sold at massive scale across India, and every one must carry mandatory declarations (manufacturer details, net quantity, MRP, date, consumer care, etc.) under the Legal Metrology (Packaged Commodities) Rules, 2011. Manual inspection by enforcement agencies can't keep up with this volume and variety, so missing declarations, wrong font sizes, and improper MRP formats go frequently undetected. The Ministry wants a software system that scans product labels/images/listings, automatically detects and validates these declarations, flags non-compliance, and gives enforcement officials reports, dashboards, and a searchable compliance history.
